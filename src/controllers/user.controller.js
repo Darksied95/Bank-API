@@ -6,9 +6,8 @@ const getUser = (req, res) => {
 }
 
 const createUser = asyncWrapper(async (req, res) => {
-    console.log(req);
     const user = await UserModel.create(req.body)
-    console.log(user);
+    res.json(user)
 
 })
 
