@@ -33,4 +33,11 @@ const createUser = asyncWrapper(async (req, res) => {
     res.json({ user, token })
 })
 
-module.exports = { createUser, deleteUsers, loginUser }
+const userDeposit = asyncWrapper(async (req, res) => {
+    console.log('user');
+    const { amount } = req.body
+    req.user.accountBalance += amount
+    res.send(req.user)
+})
+
+module.exports = { createUser, deleteUsers, loginUser, userDeposit }
