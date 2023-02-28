@@ -32,12 +32,6 @@ const userSchema = new mongoose.Schema({
         trim: true,
         required: [true, "Password is required"]
     },
-    accountNumber: {
-        type: String,
-        minlength: 10,
-        maxlength: 10,
-        required: [true, "Account Number is Required"]
-    },
     accountBalance: {
         type: Number,
         default: 0,

@@ -1,9 +1,10 @@
 const UserModel = require('../models/user.model')
 const asyncWrapper = require('../middlewares/asyncWrapper')
+const CustomError = require('../middlewares/customError')
 
-const getUser = (req, res) => {
-
-}
+const loginUser = (req, res) => asyncWrapper(async (req, res) => {
+    const user = await UserModel.findById()
+})
 
 const createUser = asyncWrapper(async (req, res) => {
     const user = await UserModel.create(req.body)
