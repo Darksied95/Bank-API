@@ -5,6 +5,7 @@ const { createUser, deleteUsers, loginUser } = require('../controllers/user.cont
 Router.post('/register', createUser)
 Router.post('/login', loginUser)
 Router.delete("/", deleteUsers)
+Router.post('/me')
 
 module.exports = Router
 
