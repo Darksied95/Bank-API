@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const jwt = require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -18,12 +19,12 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         trim: true,
+        unique: true,
         validate(value) {
             if (!validator.isEmail(value)) {
                 throw new Error('This is not a valid Email')
             }
-        },
-        unique: [true, 'Email is already in use']
+        }
     },
     password: {
         type: String,
@@ -35,7 +36,30 @@ const userSchema = new mongoose.Schema({
     accountBalance: {
         type: Number,
         default: 0,
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 })
+
+userSchema.methods.generateAuthToken = async function () {
+    const token = jwt.sign({ _id: this._id.toString() }, process.env.secretKey)
+
+    this.tokens = this.tokens.concat({ token })
+
+    await this.save()
+
+    return token
+}
+
+userSchema.methods.toJSON = function () {
+    const userObject = this.toObject()
+    delete userObject.password
+    delete userObject.tokens
+    return userObject
+}
 
 module.exports = mongoose.model('User', userSchema)
