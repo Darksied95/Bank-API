@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
+const CustomError = require('../middlewares/customError')
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -61,5 +63,24 @@ userSchema.methods.toJSON = function () {
     delete userObject.tokens
     return userObject
 }
+userSchema.statics.findByCredential = async function (email, password) {
+    const user = await UserModel.findOne({ email })
 
-module.exports = mongoose.model('User', userSchema)
+    if (!user) throw new CustomError('Wrong email or password', 404)
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    if (!isMatch) throw new CustomError('Wrong email or password', 404)
+
+    return user
+}
+
+userSchema.pre('save', async function (next) {
+    if (this.isModified('password')) {
+        this.password = await bcrypt.hash(this.password, 8)
+    }
+    next()
+})
+
+const UserModel = mongoose.model('User', userSchema)
+module.exports = UserModel
