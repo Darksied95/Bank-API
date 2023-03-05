@@ -33,6 +33,10 @@ const createUser = asyncWrapper(async (req, res) => {
     res.json({ user, token })
 })
 
+const getUser = asyncWrapper(async (req, res) => {
+    res.json(req.user)
+})
+
 const userDeposit = asyncWrapper(async (req, res) => {
     const { error } = validate("depositAmount", req.body)
 
@@ -74,4 +78,4 @@ const withdrawFund = asyncWrapper(async (req, res) => {
 
 })
 
-module.exports = { createUser, deleteUsers, loginUser, userDeposit, transferFund }
+module.exports = { createUser, deleteUsers, loginUser, userDeposit, transferFund, getUser }
