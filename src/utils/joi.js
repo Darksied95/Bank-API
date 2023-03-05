@@ -6,7 +6,7 @@ const globalSchema = {
     email: Joi.string().email().required(),
     password: Joi.string().min(8).max(255).required(),
     accountBalance: Joi.number().integer(),
-    depositAmount: Joi.number().integer().min(0.01).max(999_999_999_999).required()
+    depositAmount: Joi.number().integer().min(0.01).max(999_999_999_999)
 
 }
 const validate = (validationString, validationObject) => {
