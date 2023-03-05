@@ -38,12 +38,36 @@ const userDeposit = asyncWrapper(async (req, res) => {
 
     if (error) throw new CustomError(error.message, 400)
 
-    if (!req.body.depositAmount) throw new CusttomError("Deposit Amount must be a value", 400)
+    if (!req.body.depositAmount) throw new CustomError("Deposit Amount must be a value", 400)
 
     req.user.accountBalance += +req.body.depositAmount
 
     await req.user.save()
+
     res.json(req.user)
 })
 
-module.exports = { createUser, deleteUsers, loginUser, userDeposit }
+const transferHandler = asyncWrapper(async (req, res) => {
+    const { error } = validate("transferAmount email", req.body)
+
+    if (error) throw new CustomError(error.message, 400)
+
+    if (!req.body.transferAmount || !req.body.email) throw new CustomError("Something is not right, try agin.", 400)
+
+    if (req.user.accountBalance < req.body.transferAmount) throw new CustomError("Account Balance is too low to complete this transaction", 400)
+
+    const recipient = await UserModel.findOne({ email: req.body.email })
+
+    if (!recipient) throw new CustomError("User not found", 404)
+
+    req.user.accountBalance -= +req.body.transferAmount
+    recipient.accountBalance += +req.body.transferAmount
+
+    await recipient.save()
+    await req.user.save()
+
+    res.json({ status: "Transfer successfully sent" })
+
+})
+
+module.exports = { createUser, deleteUsers, loginUser, userDeposit, transferHandler }
