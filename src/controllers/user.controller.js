@@ -34,9 +34,10 @@ const createUser = asyncWrapper(async (req, res) => {
 })
 
 const userDeposit = asyncWrapper(async (req, res) => {
-    console.log('user');
-    const { amount } = req.body
-    req.user.accountBalance += amount
+    const { error } = validate("depositAmount", req.body)
+    console.log(error);
+    if (error) throw new CustomError(error.message, 400)
+    req.user.accountBalance += req.body.amount
     res.send(req.user)
 })
 
