@@ -40,9 +40,10 @@ const userDeposit = asyncWrapper(async (req, res) => {
 
     if (!req.body.depositAmount) throw new CusttomError("Deposit Amount must be a value", 400)
 
-    req.user.accountBalance += req.body.amount
+    req.user.accountBalance += +req.body.depositAmount
 
-    res.send(req.user)
+    await req.user.save()
+    res.json(req.user)
 })
 
 module.exports = { createUser, deleteUsers, loginUser, userDeposit }
