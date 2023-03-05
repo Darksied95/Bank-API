@@ -47,7 +47,7 @@ const userDeposit = asyncWrapper(async (req, res) => {
     res.json(req.user)
 })
 
-const transferHandler = asyncWrapper(async (req, res) => {
+const transferFund = asyncWrapper(async (req, res) => {
     const { error } = validate("transferAmount email", req.body)
 
     if (error) throw new CustomError(error.message, 400)
@@ -70,4 +70,8 @@ const transferHandler = asyncWrapper(async (req, res) => {
 
 })
 
-module.exports = { createUser, deleteUsers, loginUser, userDeposit, transferHandler }
+const withdrawFund = asyncWrapper(async (req, res) => {
+
+})
+
+module.exports = { createUser, deleteUsers, loginUser, userDeposit, transferFund }
