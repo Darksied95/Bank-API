@@ -56,7 +56,7 @@ const transferFund = asyncWrapper(async (req, res) => {
 
     if (error) throw new CustomError(error.message, 400)
 
-    if (!req.body.transferAmount || !req.body.email) throw new CustomError("Something is not right, try agin.", 400)
+    if (!req.body.transferAmount || !req.body.email) throw new CustomError("Something is not right, try again.", 400)
 
     if (req.user.accountBalance < req.body.transferAmount) throw new CustomError("Account Balance is too low to complete this transaction", 400)
 
@@ -70,12 +70,25 @@ const transferFund = asyncWrapper(async (req, res) => {
     await recipient.save()
     await req.user.save()
 
-    res.json({ status: "Transfer successfully sent" })
+    res.json({ message: "Transfer successfully sent" })
 
 })
 
 const withdrawFund = asyncWrapper(async (req, res) => {
+    const { error } = validate("transferAmount", req.body)
+
+    if (error) throw new CustomError(error.message, 400)
+
+    if (!req.body.transferAmount) throw new CustomError("Something is not right, try again,", 400)
+
+    if (req.user.accountBalance < req.body.transferAmount) throw new CustomError("Account Balance is too low to complete this transaction", 400)
+
+    req.user.accountBalance -= +req.body.transferAmount
+
+    await req.user.save()
+
+    res.json({ message: "Withdrawal successful" })
 
 })
 
-module.exports = { createUser, deleteUsers, loginUser, userDeposit, transferFund, getUser }
+module.exports = { createUser, deleteUsers, loginUser, userDeposit, transferFund, getUser, withdrawFund }
