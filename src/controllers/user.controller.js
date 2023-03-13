@@ -56,7 +56,9 @@ const transferFund = asyncWrapper(async (req, res) => {
 
     if (error) throw new CustomError(error.message, 400)
 
-    if (!req.body.transferAmount || !req.body.email) throw new CustomError("Something is not right, try again.", 400)
+    if (!req.body.transferAmount) throw new CustomError("Something is not right, try again.", 400)
+
+    if (!req.body.email) throw new CustomError("Cannnot find this user, please try again", 404)
 
     if (req.user.accountBalance < req.body.transferAmount) throw new CustomError("Account Balance is too low to complete this transaction", 400)
 
