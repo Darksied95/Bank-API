@@ -2,6 +2,7 @@ const asyncWrapper = require('../middlewares/asyncWrapper')
 const CustomError = require('../middlewares/customError')
 const UserModel = require('../models/user.model')
 const validate = require("../utils/joi")
+const fetch = require("node-fetch")
 
 
 const loginUser = asyncWrapper(async (req, res) => {
@@ -29,6 +30,16 @@ const createUser = asyncWrapper(async (req, res) => {
     const user = await UserModel.create(req.body)
 
     const token = await user.generateAuthToken()
+
+    const response = await fetch("https://api.paystack.co/customer", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.PaystackApiKey}`
+        },
+        body: JSON.stringify({ first_name: req.body.firstName, last_name: req.body.lastName, email: req.body.email })
+    })
+    console.log(response);
 
     res.json({ user, token })
 })

@@ -17,6 +17,7 @@
     "joi": "^17.8.3",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.10.0",
+    "node-fetch": "^2.6.9",
     "validator": "^13.9.0"
   }
 }
