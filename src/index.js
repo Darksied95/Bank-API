@@ -11,5 +11,5 @@ app.use('/api/users', userRouter)
 app.use(errorHandler)
 
 app.listen(3000, () => {
-  console.log('Connected on port 3000', 'klpp')
+  console.log('Connected on port 3000')
 })
